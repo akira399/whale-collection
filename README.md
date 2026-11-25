@@ -3,7 +3,7 @@
   <h1>大肥鱼的收藏箱</h1>
   <p><strong>把散落的 AI 工具、开源项目和提示词，收进一个手机收藏箱。</strong></p>
   <p>分享一个链接，AI 帮你看懂它是做什么的、有什么用、去哪下载。</p>
-  <p><a href="https://github.com/akira399/whale-collection/releases/latest"><strong>下载 Android APK</strong></a> · <a href="#上手指南">上手指南</a> · <a href="https://github.com/akira399/whale-collection/issues">反馈问题</a></p>
+  <p><a href="https://github.com/akira399/whale-collection/releases/latest"><strong>下载 Android APK</strong></a> · <a href="https://github.com/akira399/whale-collection-windows">Windows 版</a> · <a href="#上手指南">上手指南</a> · <a href="https://github.com/akira399/whale-collection/issues">反馈问题</a></p>
   <p>Android 7.0+ · Flutter · 简体中文 · 本地收藏</p>
 </div>
 
@@ -42,6 +42,12 @@
 从 1.0.1 起，应用启动后会自动检查正式版本，发现新版时在首页显示提示。也可以在「设置 → 应用更新」手动检查，查看更新内容，并通过国内加速线路下载适合设备的 APK。下载后应用会校验包名、版本和签名，再由 Android 确认覆盖安装，原有收藏会保留。首次安装更新时，系统可能要求允许本应用安装其他应用。
 
 已安装 1.0.0 的用户可从 [GitHub Releases](https://github.com/akira399/whale-collection/releases/latest) 下载最新 APK 覆盖安装一次。
+
+## Windows 桌面版
+
+在电脑上也可以收藏 AI 工具、复用提示词和整理标签。Windows 10/11 x64 用户可下载免安装 ZIP，解压后运行 `ai_tool_collection.exe`。 [Windows 仓库](https://github.com/akira399/whale-collection-windows) · [下载 Windows 版](https://github.com/akira399/whale-collection-windows/releases/latest)
+
+手机与 Windows 共用 JSON 备份格式。在一端的「备份与恢复」导出，另一端导入并预览即可。收藏、提示词、标签、置顶和备注随备份迁移，API Key 与外观设置保存在各自设备上。
 
 ## 数据与联网
 
