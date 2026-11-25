@@ -37,6 +37,12 @@
 
 从之前的测试版迁移时，请先在「设置 → 备份与恢复」导出 JSON。公开版使用独立签名，需卸载测试版后安装，再导入备份并重新填写模型 Key。
 
+### 应用内更新
+
+从 1.0.1 起，应用启动后会自动检查正式版本，发现新版时在首页显示提示。也可以在「设置 → 应用更新」手动检查，查看更新内容，并通过国内加速线路下载适合设备的 APK。下载后应用会校验包名、版本和签名，再由 Android 确认覆盖安装，原有收藏会保留。首次安装更新时，系统可能要求允许本应用安装其他应用。
+
+已安装 1.0.0 的用户可从 [GitHub Releases](https://github.com/akira399/whale-collection/releases/latest) 下载最新 APK 覆盖安装一次。
+
 ## 数据与联网
 
 - 收藏数据保存在设备的 SQLite 数据库，API Key 保存在 Android 安全存储。导出的 JSON 备份只包含收藏数据，卸载前记得备份。
@@ -56,6 +62,8 @@ flutter build apk --release --split-per-abi
 ```
 
 构建产物在 `build/app/outputs/flutter-apk/`。自行分发时可通过 `android/key.properties` 配置签名文件、别名和密码。公开版的签名私钥由维护者保存。 [Flutter Android 签名文档](https://docs.flutter.dev/deployment/android#sign-the-app)
+
+正式发布使用 `vX.Y.Z` 标签和 `Whale-Collection-X.Y.Z-android-<ABI>.apk` 附件名。每次发布递增 Android 构建号，三个架构的 APK 沿用同一个发布签名。应用从最新正式 Release 读取版本和匹配的安装包。
 
 欢迎在 [Issues](https://github.com/akira399/whale-collection/issues) 反馈解析失败的公开链接，或者分享你拿收藏箱整理了什么。喜欢这个项目，也欢迎点一颗 Star。
 

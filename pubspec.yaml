@@ -1,7 +1,7 @@
 name: ai_tool_collection
 description: Local-first Android collection for AI tools and resources.
 publish_to: none
-version: 1.0.0+16
+version: 1.0.1+17
 
 environment:
   sdk: ^3.13.7

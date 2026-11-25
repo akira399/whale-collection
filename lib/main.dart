@@ -12,11 +12,13 @@ import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 
 import 'collection_controller.dart';
+import 'app_updates.dart';
 import 'appearance.dart';
 import 'card_glow.dart';
 import 'collection_store.dart';
 import 'collection_ui.dart';
 import 'link_services.dart';
+import 'update_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,15 +41,23 @@ class CollectionApp extends StatefulWidget {
 
 class _CollectionAppState extends State<CollectionApp> {
   final appearance = AppearanceController();
+  AppUpdates? _updates;
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null) unawaited(appearance.initialize());
+    if (widget.controller == null) {
+      unawaited(appearance.initialize());
+      if (Platform.isAndroid) {
+        final updates = _updates = AppUpdates();
+        unawaited(updates.check(automatic: true));
+      }
+    }
   }
 
   @override
   void dispose() {
+    _updates?.dispose();
     appearance.dispose();
     super.dispose();
   }
@@ -71,7 +81,7 @@ class _CollectionAppState extends State<CollectionApp> {
             value.mode == ThemeMode.dark ||
             (value.mode == ThemeMode.system &&
                 data.platformBrightness == Brightness.dark);
-        return AppearanceScope(
+        final contents = AppearanceScope(
           controller: appearance,
           child: MediaQuery(
             data: data.copyWith(
@@ -105,6 +115,10 @@ class _CollectionAppState extends State<CollectionApp> {
             ),
           ),
         );
+        final updates = _updates;
+        return updates == null
+            ? contents
+            : UpdatesScope(updates: updates, child: contents);
       },
       home: widget.controller == null
           ? const _Startup()

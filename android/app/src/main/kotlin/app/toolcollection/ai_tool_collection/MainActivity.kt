@@ -40,6 +40,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        AppUpdateChannel(this, flutterEngine.dartExecutor.binaryMessenger)
         gravityChannel = EventChannel(flutterEngine.dartExecutor.binaryMessenger, "app.toolcollection/gravity")
         gravityChannel?.setStreamHandler(gravity)
         shareChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.toolcollection/share")

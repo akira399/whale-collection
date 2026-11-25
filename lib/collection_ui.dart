@@ -16,6 +16,7 @@ import 'collection_store.dart';
 import 'collection_transfer.dart';
 import 'link_services.dart';
 import 'mascot_dialogue.dart';
+import 'update_page.dart';
 
 const _networkNotice =
     '应用会访问你收藏的链接。原页面资料不足时，优先使用模型服务商的搜索，可能产生费用。其他情况使用 Mwmbl 或 Tavily 补查公开资料。'
@@ -597,6 +598,7 @@ class _CollectionPageState extends State<CollectionPage>
           ),
         ),
         const SizedBox(height: 12),
+        const UpdateTile(home: true),
         TextField(
           controller: _search,
           onChanged: controller.search,
@@ -1443,6 +1445,7 @@ Future<void> _settings(BuildContext context, CollectionController controller) =>
                       ),
                     ),
                   ),
+                  const UpdateTile(),
                 ],
               ),
             ),
