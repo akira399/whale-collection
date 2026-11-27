@@ -1,13 +1,13 @@
 name: ai_tool_collection
 description: Local-first Android collection for AI tools and resources.
 publish_to: none
-version: 1.0.1+17
+version: 1.0.2+18
 
 environment:
   sdk: ^3.13.7
 
 dependencies:
-  animations: ^2.2.0
+  animations: ^3.0.0
   flutter:
     sdk: flutter
   flutter_localizations:

@@ -114,24 +114,79 @@ class _CollectionPageState extends State<CollectionPage>
   int _heardBatch = 0;
 
   final _random = math.Random();
+  final _mascotMenu = GlobalKey<PopupMenuButtonState<MascotAction>>();
   int? _heardTool;
-  int? _lastLine;
   String _petLine = mascotGreeting(DateTime.now().hour);
+  int _petReactionSequence = 0;
+  ({int sequence, IconData icon})? _petReaction;
   CollectionController get controller => widget.controller;
 
-  void _chatWithMascot() {
-    final previous = _lastLine;
-    var index = _random.nextInt(
-      mascotChatter.length - (previous == null ? 0 : 1),
-    );
-    if (previous != null && index >= previous) index++;
+  void _chatWithMascot() =>
+      _speak(chooseMascotLine(mascotChatter, _petLine, _random));
+
+  void _speak(String line, {IconData? reaction}) {
     setState(() {
       _heardTool = controller.latestOrganizedTool?.id;
       _heardBatch = controller.batchVersion;
-      _lastLine = index;
-      _petLine = mascotChatter[index];
+      _petLine = line;
+      _petReaction = reaction == null
+          ? null
+          : (sequence: ++_petReactionSequence, icon: reaction);
     });
   }
+
+  void _openMascotMenu() => _mascotMenu.currentState?.showButtonMenu();
+
+  void _interactWithMascot(MascotAction action) {
+    switch (action) {
+      case MascotAction.feed:
+        _speak(
+          chooseMascotLine(mascotFeeding, _petLine, _random),
+          reaction: Icons.favorite_rounded,
+        );
+      case MascotAction.joke:
+        _speak(
+          chooseMascotLine(mascotJokes, _petLine, _random),
+          reaction: Icons.emoji_emotions_rounded,
+        );
+      case MascotAction.surprise:
+        final entries = controller.entries;
+        if (entries.isEmpty) {
+          _speak(
+            controller.filtered
+                ? '这次筛选没找到宝贝，换个条件再翻翻吧。'
+                : '箱子还空着呢！先收一件宝贝，下次我来翻给你看。',
+            reaction: Icons.search_rounded,
+          );
+          return;
+        }
+        final entry = entries[_random.nextInt(entries.length)];
+        _speak('翻到「${clip(entry.title, 18)}」啦，打开看看！');
+        _detail(entry.id, initialEntry: entry);
+    }
+  }
+
+  Widget _mascotSpeech(String speech) => Row(
+    children: [
+      Expanded(
+        child: _CollectionSwap(
+          child: _PetSpeech(key: ValueKey(speech), text: speech),
+        ),
+      ),
+      const SizedBox(width: 4),
+      PopupMenuButton<MascotAction>(
+        key: _mascotMenu,
+        tooltip: '鲸鱼娘互动',
+        icon: const Icon(Icons.auto_awesome_rounded),
+        onSelected: _interactWithMascot,
+        itemBuilder: (_) => const [
+          PopupMenuItem(value: MascotAction.feed, child: Text('投喂小鱼')),
+          PopupMenuItem(value: MascotAction.joke, child: Text('讲个冷笑话')),
+          PopupMenuItem(value: MascotAction.surprise, child: Text('随机翻个宝贝')),
+        ],
+      ),
+    ],
+  );
 
   @override
   void initState() {
@@ -561,13 +616,13 @@ class _CollectionPageState extends State<CollectionPage>
                         CollectionMascot(
                           size: (constraints.maxWidth * .26).clamp(60.0, 90.0),
                           onTap: _chatWithMascot,
+                          onMore: _openMascotMenu,
+                          reaction: _petReaction,
                         ),
                       ],
                     ),
                     const SizedBox(height: 9),
-                    _CollectionSwap(
-                      child: _PetSpeech(key: ValueKey(speech), text: speech),
-                    ),
+                    _mascotSpeech(speech),
                   ],
                 );
               }
@@ -585,13 +640,13 @@ class _CollectionPageState extends State<CollectionPage>
                       CollectionMascot(
                         size: mascotSize,
                         onTap: _chatWithMascot,
+                        onMore: _openMascotMenu,
+                        reaction: _petReaction,
                       ),
                     ],
                   ),
                   const SizedBox(height: 9),
-                  _CollectionSwap(
-                    child: _PetSpeech(key: ValueKey(speech), text: speech),
-                  ),
+                  _mascotSpeech(speech),
                 ],
               );
             },

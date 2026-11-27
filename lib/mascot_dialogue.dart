@@ -1,4 +1,13 @@
+import 'dart:math';
+
 import 'collection_models.dart';
+
+enum MascotAction { feed, joke, surprise }
+
+String chooseMascotLine(List<String> lines, String previous, Random random) {
+  final choices = lines.where((line) => line != previous).toList();
+  return choices[random.nextInt(choices.length)];
+}
 
 String mascotGreeting(int hour) {
   final greeting = hour < 5
@@ -20,6 +29,23 @@ const mascotChatter = [
   '我刚打了个盹，箱子里不会又多了十个工具吧？',
   '下次说「那个很好用但忘了名字的工具」时，记得来问箱子。',
   '今日工作：看箱子、收宝贝，以及非常努力地发呆。',
+  '我数了三遍宝贝，每次都把自己算进去。',
+  '你写提示词的时候，我偷偷补了一句：请多给鲸鱼放假。',
+  '我的理想工作环境：一只宝箱、两颗泡泡、旁边还有你。',
+];
+
+const mascotFeeding = [
+  '啊呜！这条小鱼好鲜。今日值班续航加满！',
+  '谢谢投喂！我会把最后一口留到……已经吃完了。',
+  '收到小鱼一条。回礼是把宝箱看得更紧一点！',
+  '嚼嚼嚼。刚才说什么？我在认真品鉴。',
+];
+
+const mascotJokes = [
+  '鲸鱼为什么很少迷路？因为随身带着一个海图（还涂了防水层）。',
+  '为什么程序员喜欢来海底？因为这里到处都是泡泡（bubble），一看就是来排序的。',
+  '什么鱼最擅长备份？记得存档的金鱼。等等，它记得吗？',
+  '我问宝箱为什么不说话。它说，它只会开口。',
 ];
 
 String mascotQuip(CollectionCategory? category) => switch (category) {

@@ -24,10 +24,18 @@ BoxDecoration collectionPanel(ColorScheme colors) => BoxDecoration(
 );
 
 class CollectionMascot extends StatefulWidget {
-  const CollectionMascot({super.key, required this.size, required this.onTap});
+  const CollectionMascot({
+    super.key,
+    required this.size,
+    required this.onTap,
+    required this.onMore,
+    this.reaction,
+  });
 
   final double size;
   final VoidCallback onTap;
+  final VoidCallback onMore;
+  final ({int sequence, IconData icon})? reaction;
 
   @override
   State<CollectionMascot> createState() => _CollectionMascotState();
@@ -44,6 +52,17 @@ class _CollectionMascotState extends State<CollectionMascot>
     duration: const Duration(milliseconds: 440),
   );
   late final _motion = Listenable.merge([_float, _hop]);
+
+  @override
+  void didUpdateWidget(covariant CollectionMascot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.reaction != null &&
+        widget.reaction != oldWidget.reaction &&
+        !MediaQuery.disableAnimationsOf(context) &&
+        TickerMode.valuesOf(context).enabled) {
+      _hop.forward(from: 0);
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -82,7 +101,11 @@ class _CollectionMascotState extends State<CollectionMascot>
             if (!reduced) _hop.forward(from: 0);
             widget.onTap();
           },
-          radius: size * .52,
+          onLongPress: widget.onMore,
+          onSecondaryTap: widget.onMore,
+          splashFactory: NoSplash.splashFactory,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
           child: SizedBox.square(
             dimension: size,
             child: Stack(
@@ -134,6 +157,35 @@ class _CollectionMascotState extends State<CollectionMascot>
                     );
                   },
                 ),
+                if (widget.reaction case (:final icon, sequence: _))
+                  Positioned(
+                    top: 6,
+                    right: 4,
+                    child: IgnorePointer(
+                      child: AnimatedBuilder(
+                        animation: _hop,
+                        child: Icon(
+                          icon,
+                          size: size * .19,
+                          color: colors.primary,
+                        ),
+                        builder: (context, child) {
+                          if (reduced || !_hop.isAnimating) {
+                            return const SizedBox.shrink();
+                          }
+                          return Opacity(
+                            opacity: math
+                                .sin(_hop.value * math.pi)
+                                .clamp(0.0, 1.0),
+                            child: Transform.translate(
+                              offset: Offset(0, -size * .16 * _hop.value),
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
